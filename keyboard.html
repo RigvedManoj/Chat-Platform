@@ -1,0 +1,116 @@
+<html>
+  <head>
+    <style>
+    .inline-div {
+    display:inline-block;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+.inline-txtarea {
+    margin-left: 0px; margin-right: 0px; width: 470px;
+    resize: none;
+    height:125px;
+}
+button
+{
+	background:lightgreen;
+	border-radius: 5px;
+	width: 10em;
+	height: 3em;
+
+}
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+   <meta charset="utf-8">
+   <title>KEYBOARD</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  </head>
+  <script type="text/javascript" src="https://translate.yandex.net/api/v1.5/tr/translate?key=trnsl.1.1.20170716T201555Z.065ca6f0ad8f0aac.dfe7c6e31a7e16dbe64277e1d11b3052a488f8ec&text=haha&lang=<translation direction>&[format=<text format>]&[options=<translation options>]&[callback=<name of the callback function>]"></script>
+  <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+  <script type="text/javascript">
+  google.load("elements", "1", {
+  packages: "keyboard"
+  });
+function onload()
+{
+  var kbd = new google.elements.keyboard.Keyboard(
+['ru'],['t1']);
+}
+function language()
+{ document.getElementById('t1').value="";
+document.getElementById('t2').value="";
+  var code=document.getElementById("language").value;
+  document.getElementById('p1').innerHTML=document.getElementById(code).innerHTML;
+  var kbd = new google.elements.keyboard.Keyboard(
+[code],['t1']);
+}
+
+  google.setOnLoadCallback(onload);
+
+</script>
+<body ng-app="jsbin">
+  <select id="language" onclick="language()" >
+<option id='ru'value='ru'>RUSSIAN</option>
+<option id='en'value='en'>ENGLISH</option>
+<option id='bg'value='bg'>BULGARIAN</option>
+<option id='fr'value='fr'>FRENCH</option>
+<option id='sq'value='sq'>ALBANIAN</option>
+<option id='ar'value= 'ar'>ARABIC</option>
+<option id='da'value='da'>DANISH</option></select>
+<br><br>
+<div class="inline-div">
+    <p id='p1' align="center">LANGUAGE</p>
+    <textarea id='t1' cols="15" rows="15" class="inline-txtarea"></textarea>
+</div>
+<div class="inline-div">
+  <div ng-controller="DemoCtrl as vm">
+
+          <button ng-click="SendData()">translate</button>
+  </div>
+</div>
+<div class="inline-div">
+<p  align="center">ENGLISH</p>
+    <textarea id='t2' cols="15" rows="15" class="inline-txtarea"></textarea>
+</div>
+  </body>
+  </html>
+  <script>
+  var app = angular.module('jsbin', []);
+
+app.controller('DemoCtrl',function($scope, $http){
+
+    $scope.SendData = function () {
+      var textApi=document.getElementById('t1').value;
+      var langApi=document.getElementById('language').value+'-en';
+       var url = "https://translate.yandex.net/api/v1.5/tr.json/translate?";
+    var  keyAPI ="trnsl.1.1.20170717T083008Z.59d8cace73ff33c0.bfe6cd71b7b9fc98bad2addba143e3ee59a46da2";
+
+       params ='key='+keyAPI+'&text='+textApi+'&lang='+langApi;
+    var vm = this;
+       $scope.method = 'POST';
+    $scope.url = 'https://translate.yandex.net/api/v1.5/tr.json/translate?';
+
+     $http({
+   url: url,
+   method:"POST",
+   params:{key:keyAPI,text:textApi,lang:langApi},
+})
+.success(function(data,headers,status,config){
+  console.log(data.text);
+  document.getElementById('t2').value=data.text;
+ })
+.error(function(data,headers,status,config){
+ $scope.ResponseDetails = "Data: " + data +
+                "<hr />status: " + status +
+                     "<hr />config: " + config;
+       console.log("error1");
+       console.log(data);
+        console.log(status);
+       console.log(config)
+     }
+)
+}
+}
+);
+</script>
+</html>

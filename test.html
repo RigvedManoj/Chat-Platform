@@ -1,0 +1,14 @@
+<html>
+<body>
+  <div id='q'></div>
+<script>
+var newNoteContainer   = document.createElement('div');
+
+   newNoteContainer.className = "note";
+   newNoteContainer.id = "note-"+note.id;
+   newNoteContainer.innerHTML += '<button title="Edit" class="note-button note-edit" onclick="noteEditStart(event)">📝</button>';
+   newNoteContainer.innerHTML += '<button title="Close" class="note-button note-close" onclick="noteDelete(event)">✘</button>';
+
+   document.getElementById('body').appendChild(newNoteContainer);
+}
+</script>

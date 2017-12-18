@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+  <meta charset="utf-8">
+  <title>Angular JS</title>
+   </head>
+<body ng-app="jsbin">
+  <div ng-controller="DemoCtrl as vm">
+
+          <button ng-click="SendData()">Send</button>
+    <br>
+      Data:  {{PostDataResponse}}<br>
+    {{vm.data}}
+    {{vm.PostDataResponse}}
+   Data:  {{scope.PostDataResponse}}
+    {{vm.data}}
+  </div>
+  </body>
+  </html>
+  <script>
+  var app = angular.module('jsbin', []);
+
+app.controller('DemoCtrl',function($scope, $http){
+
+    $scope.SendData = function () {
+          // тут данные
+      var textApi='мир';
+      var langApi='ru-en';
+       var url = "https://translate.yandex.net/api/v1.5/tr.json/translate?";
+    var  keyAPI ="trnsl.1.1.20170717T083008Z.59d8cace73ff33c0.bfe6cd71b7b9fc98bad2addba143e3ee59a46da2";
+
+       params ='key='+keyAPI+'&text='+textApi+'&lang='+langApi;
+    var vm = this;
+       $scope.method = 'POST';
+    $scope.url = 'https://translate.yandex.net/api/v1.5/tr.json/translate?';
+
+     $http({
+   url: url,
+   method:"POST",
+   params:{key:keyAPI,text:textApi,lang:langApi},
+})
+.success(function(data,headers,status,config){
+  $scope.PostDataResponse = data;
+  vm.data = data;
+  console.log(data);
+ })
+.error(function(data,headers,status,config){
+ $scope.ResponseDetails = "Data: " + data +
+                "<hr />status: " + status +
+                     "<hr />config: " + config;
+       console.log("error1");
+       console.log(data);
+        console.log(status);
+       console.log(config)
+     }
+)
+}
+}
+);
+</script>

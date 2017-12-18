@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+
+    <title>Speech color changer</title>
+
+
+    <style>
+      body, html {
+  margin: 0;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  height: inherit;
+  overflow: hidden;
+}
+
+
+
+div {
+  height: 100px;
+  overflow: auto;
+  position: absolute;
+  bottom: 0px;
+  right: 0;
+  left: 0;
+  background-color: rgba(255,255,255,0.2);
+}
+
+ul {
+  margin: 0;
+}
+    </style>
+
+  </head>
+
+  <body onload="draw()">
+    <h1>VOICE COMMAND</h1>
+
+    <canvas id="canvas" width="500" height="500" style="border:1px solid #000000"></canvas>
+    <div>
+        <p class="output"><em>...diagnostic messages</em></p>
+    </div>
+
+    <script>
+   var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition
+var SpeechGrammarList = SpeechGrammarList || webkitSpeechGrammarList
+var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEvent
+
+var commands = ['up','down','left','right'];
+var grammar = '#JSGF V1.0; grammar colors; public <commands> = ' + commands.join(' | ') + ' ;'
+
+var recognition = new SpeechRecognition();
+var speechRecognitionList = new SpeechGrammarList();
+speechRecognitionList.addFromString(grammar, 1);
+recognition.grammars = speechRecognitionList;
+//recognition.continuous = false;
+recognition.lang = 'en-US';
+recognition.interimResults = false;
+recognition.maxAlternatives = 5;
+var last;
+var command;
+
+var diagnostic = document.querySelector('.output');
+//var bg = document.querySelector('html');
+var c=document.getElementById("canvas");
+var ctx=c.getContext("2d");
+var ball={
+  x:250,
+  y:200,
+  rad:40,
+  }
+  function draw()
+{ctx.beginPath();
+ctx.arc(ball.x,ball.y,ball.rad,0,2*Math.PI);
+ctx.stroke();
+}
+function moveup()
+{
+ctx.clearRect(0,0,canvas.width,canvas.height);
+ball.y=ball.y-50;
+
+draw();
+
+}
+function movedown()
+{
+ctx.clearRect(0,0,canvas.width,canvas.height);
+ball.y=ball.y+50;
+
+draw();
+
+}
+function moveright()
+{
+ctx.clearRect(0,0,canvas.width,canvas.height);
+ball.x=ball.x+50;
+
+draw();
+
+}
+function moveleft()
+{
+ctx.clearRect(0,0,canvas.width,canvas.height);
+ball.x=ball.x-50;
+
+draw();
+
+}
+
+
+
+
+document.body.onclick = function() {
+  recognition.start();
+  console.log('Ready to receive a command.');
+}
+
+recognition.onresult = function(event) {
+
+
+   last = event.results.length - 1;
+   command = event.results[last][0].transcript;
+
+  diagnostic.textContent = 'Result received: ' + command + '.';
+  console.log('Confidence: ' + event.results[0][0].confidence);
+  if(command=="up")
+{
+  moveup();
+}
+else
+if(command=="down")
+{
+  movedown();
+}
+if(command=="right")
+{
+  moveright();
+}
+if(command=="left")
+{
+  moveleft();
+}
+}
+
+recognition.onspeechend = function() {
+  recognition.stop();
+}
+
+recognition.onnomatch = function(event) {
+  diagnostic.textContent = "I didn't recognise that command.";
+}
+
+recognition.onerror = function(event) {
+  diagnostic.textContent = 'Error occurred in recognition: ' + event.error;
+}
+    </script>
+  </body>
+</html>
